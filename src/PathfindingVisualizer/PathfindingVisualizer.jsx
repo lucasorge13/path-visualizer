@@ -95,6 +95,19 @@ export default class PathfindingVisualizer extends Component {
     });
   }
 
+  clearWalls(){
+    const { grid } = this.state;
+    const newGrid = grid.map(row => {
+      return row.map(node => {
+        if (node.isWall) {
+          return { ...node, isWall: false };
+        }
+        return node;
+      });
+    });
+    this.setState({ grid: newGrid });
+  }
+
 
   render() {
     const {grid, mouseIsPressed} = this.state;
@@ -106,6 +119,9 @@ export default class PathfindingVisualizer extends Component {
         </button>
         <button onClick={() => this.resetGrid()}>
           Reset Grid
+        </button>
+        <button onClick={() => this.clearWalls()}>
+          Clear Walls
         </button>
         <div className="grid">
           {grid.map((row, rowIdx) => {
