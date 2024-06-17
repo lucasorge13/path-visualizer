@@ -25,3 +25,23 @@ button:hover {
 button:focus {
   outline: none;
 }
+
+.grid-row {
+  display: flex;
+}
+
+.node {
+  width: 25px;
+  height: 25px;
+  outline: 1px solid rgb(175, 216, 248);
+  display: inline-block;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.node-finish {
+  background-color: red;
+}
+
+.node-start {
+  background-color: green;
+}
