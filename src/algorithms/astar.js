@@ -1,3 +1,5 @@
+import { getUnvisitedNeighbors, getAllNodes } from './helpers';
+
 // Performs A* algorithm; returns all nodes in the order in which they were visited.
 export function astar(grid, startNode, finishNode) {
   const visitedNodesInOrder = [];
