@@ -116,24 +116,34 @@ export default class PathfindingVisualizer extends Component {
 
     return (
       <>
-        <button onClick={() => this.visualizeAlgorithm(dijkstra)}>
-          Visualize Dijkstra's Algorithm
-        </button>
-        <button onClick={() => this.visualizeAlgorithm(bfs)}>
-          Visualize BFS
-        </button>
-        <button onClick={() => this.visualizeAlgorithm(dfs)}>
-          Visualize DFS
-        </button>
-        <button onClick={() => this.visualizeAlgorithm(astar)}>
-          Visualize A*
-        </button>
-        <button onClick={() => this.resetGrid()}>
-          Reset Grid
-        </button>
-        <button onClick={() => this.clearWalls()}>
-          Clear Walls
-        </button>
+        <header className="header">
+          <h1>Pathfinding Visualizer</h1>
+          <div className="header-buttons">
+            <div className="dropdown">
+              <button className="dropbtn">Algorithms <span className="arrow"></span></button>
+              <div className="dropdown-content">
+                <button onClick={() => this.visualizeAlgorithm(dijkstra)}>
+                  Visualize Dijkstra's Algorithm
+                </button>
+                <button onClick={() => this.visualizeAlgorithm(bfs)}>
+                  Visualize BFS
+                </button>
+                <button onClick={() => this.visualizeAlgorithm(dfs)}>
+                  Visualize DFS
+                </button>
+                <button onClick={() => this.visualizeAlgorithm(astar)}>
+                  Visualize A*
+                </button>
+              </div>
+            </div>
+            <button onClick={() => this.resetGrid()}>
+              Reset Grid
+            </button>
+            <button onClick={() => this.clearWalls()}>
+              Clear Walls
+            </button>
+          </div>
+        </header>
         <div className="grid">
           {grid.map((row, rowIdx) => {
             return (

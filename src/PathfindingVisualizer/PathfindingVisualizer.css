@@ -1,8 +1,87 @@
-.grid {
-  margin: 50px auto;
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+.header {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #282c34;
+  color: white;
+  padding: 10px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.header-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.arrow {
+  margin-left: 5px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid white;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content button {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.dropdown-content button:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
 }
 
 button {
@@ -24,6 +103,13 @@ button:hover {
 
 button:focus {
   outline: none;
+}
+
+.grid {
+  margin: 100px auto 50px; /* Adjust the margin to account for the fixed header */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .grid-row {
@@ -57,7 +143,6 @@ button:focus {
   animation-play-state: running;
 }
 
-
 @keyframes visitedAnimation {
   0% {
     transform: scale(0.3);
@@ -79,7 +164,6 @@ button:focus {
     background-color: rgba(0, 190, 218, 0.75);
   }
 }
-
 
 .node-wall {
   background-color: rgb(12, 53, 71);
