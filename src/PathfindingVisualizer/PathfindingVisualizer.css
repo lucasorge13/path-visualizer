@@ -105,6 +105,14 @@ button:focus {
   outline: none;
 }
 
+.visualize-btn {
+  background-color: #28a745; /* Green color for Visualize button */
+}
+
+.visualize-btn:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
 .grid {
   margin: 100px auto 50px; /* Adjust the margin to account for the fixed header */
   display: flex;

@@ -18,6 +18,7 @@ export default class PathfindingVisualizer extends Component {
     this.state = {
       grid: [],
       mouseIsPressed: false,
+      selectedAlgorithm: 'dijkstra', // Default selected algorithm
     };
   }
 
@@ -39,6 +40,27 @@ export default class PathfindingVisualizer extends Component {
 
   handleMouseUp() {
     this.setState({ mouseIsPressed: false });
+  }
+
+  resetNodeStates() {
+    const { grid } = this.state;
+    const newGrid = grid.map(row =>
+      row.map(node => {
+        const newNode = {
+          ...node,
+          isVisited: false,
+          distance: Infinity,
+          totalDistance: Infinity,
+          previousNode: null,
+        };
+        if (newNode.isStart) newNode.distance = 0;
+        return newNode;
+      })
+    );
+    this.setState({ grid: newGrid }, () => {
+      this.resetNodeClasses();
+      this.setStartAndFinishNodes();
+    });
   }
 
   animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder) {
@@ -67,11 +89,27 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
-  visualizeAlgorithm(algorithm) {
-    const { grid } = this.state;
+  visualizeSelectedAlgorithm() {
+    this.resetNodeStates(); // Reset node states before running a new algorithm
+    const { grid, selectedAlgorithm } = this.state;
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
     const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
-    const visitedNodesInOrder = algorithm(grid, startNode, finishNode);
+    let visitedNodesInOrder;
+    switch (selectedAlgorithm) {
+      case 'bfs':
+        visitedNodesInOrder = bfs(grid, startNode, finishNode);
+        break;
+      case 'dfs':
+        visitedNodesInOrder = dfs(grid, startNode, finishNode);
+        break;
+      case 'astar':
+        visitedNodesInOrder = astar(grid, startNode, finishNode);
+        break;
+      case 'dijkstra':
+      default:
+        visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+        break;
+    }
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
     this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
   }
@@ -112,7 +150,7 @@ export default class PathfindingVisualizer extends Component {
   }
 
   render() {
-    const { grid, mouseIsPressed } = this.state;
+    const { grid, mouseIsPressed, selectedAlgorithm } = this.state;
 
     return (
       <>
@@ -120,22 +158,27 @@ export default class PathfindingVisualizer extends Component {
           <h1>Pathfinding Visualizer</h1>
           <div className="header-buttons">
             <div className="dropdown">
-              <button className="dropbtn">Algorithms <span className="arrow"></span></button>
+              <button className="dropbtn">
+                Algorithms <span className="arrow"></span>
+              </button>
               <div className="dropdown-content">
-                <button onClick={() => this.visualizeAlgorithm(dijkstra)}>
-                  Visualize Dijkstra's Algorithm
+                <button onClick={() => this.setState({ selectedAlgorithm: 'Dijkstra' })}>
+                  Dijkstra's
                 </button>
-                <button onClick={() => this.visualizeAlgorithm(bfs)}>
-                  Visualize BFS
+                <button onClick={() => this.setState({ selectedAlgorithm: 'BFS' })}>
+                  BFS
                 </button>
-                <button onClick={() => this.visualizeAlgorithm(dfs)}>
-                  Visualize DFS
+                <button onClick={() => this.setState({ selectedAlgorithm: 'DFS' })}>
+                  DFS
                 </button>
-                <button onClick={() => this.visualizeAlgorithm(astar)}>
-                  Visualize A*
+                <button onClick={() => this.setState({ selectedAlgorithm: 'A*' })}>
+                  A*
                 </button>
               </div>
             </div>
+            <button className="visualize-btn" onClick={() => this.visualizeSelectedAlgorithm()}>
+              Visualize {selectedAlgorithm.charAt(0).toUpperCase() + selectedAlgorithm.slice(1)}
+            </button>
             <button onClick={() => this.resetGrid()}>
               Reset Grid
             </button>
@@ -179,7 +222,7 @@ const getInitialGrid = () => {
   const grid = [];
   for (let row = 0; row < 20; row++) {
     const currentRow = [];
-    for (let col = 0; col < 50; col++) {
+    for (let col = 0; 50; col++) {
       currentRow.push(createNode(col, row));
     }
     grid.push(currentRow);
