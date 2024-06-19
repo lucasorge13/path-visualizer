@@ -19,6 +19,7 @@ export default class PathfindingVisualizer extends Component {
       grid: [],
       mouseIsPressed: false,
       selectedAlgorithm: 'dijkstra', // Default selected algorithm
+      isAnimating: false, // Track animation status
     };
   }
 
@@ -28,17 +29,19 @@ export default class PathfindingVisualizer extends Component {
   }
 
   handleMouseDown(row, col) {
+    if (this.state.isAnimating) return; // Prevent changes while animating
     const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
     this.setState({ grid: newGrid, mouseIsPressed: true });
   }
 
   handleMouseEnter(row, col) {
-    if (!this.state.mouseIsPressed) return;
+    if (!this.state.mouseIsPressed || this.state.isAnimating) return; // Prevent changes while animating
     const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
     this.setState({ grid: newGrid });
   }
 
   handleMouseUp() {
+    if (this.state.isAnimating) return; // Prevent changes while animating
     this.setState({ mouseIsPressed: false });
   }
 
@@ -89,36 +92,42 @@ export default class PathfindingVisualizer extends Component {
           document.getElementById(`node-${node.row}-${node.col}`).className =
             'node node-shortest-path';
         }
+        if (i === nodesInShortestPathOrder.length - 1) {
+          this.setState({ isAnimating: false }); // Animation complete
+        }
       }, 50 * i);
     }
   }
 
   visualizeSelectedAlgorithm() {
-    this.resetNodeStates(); // Reset node states before running a new algorithm
-    const { grid, selectedAlgorithm } = this.state;
-    const startNode = grid[START_NODE_ROW][START_NODE_COL];
-    const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
-    let visitedNodesInOrder;
-    switch (selectedAlgorithm) {
-      case 'bfs':
-        visitedNodesInOrder = bfs(grid, startNode, finishNode);
-        break;
-      case 'dfs':
-        visitedNodesInOrder = dfs(grid, startNode, finishNode);
-        break;
-      case 'astar':
-        visitedNodesInOrder = astar(grid, startNode, finishNode);
-        break;
-      case 'dijkstra':
-      default:
-        visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
-        break;
-    }
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
+    this.setState({ isAnimating: true }, () => {
+      this.resetNodeStates(); // Reset node states before running a new algorithm
+      const { grid, selectedAlgorithm } = this.state;
+      const startNode = grid[START_NODE_ROW][START_NODE_COL];
+      const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+      let visitedNodesInOrder;
+      switch (selectedAlgorithm) {
+        case 'bfs':
+          visitedNodesInOrder = bfs(grid, startNode, finishNode);
+          break;
+        case 'dfs':
+          visitedNodesInOrder = dfs(grid, startNode, finishNode);
+          break;
+        case 'astar':
+          visitedNodesInOrder = astar(grid, startNode, finishNode);
+          break;
+        case 'dijkstra':
+        default:
+          visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+          break;
+      }
+      const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+      this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
+    });
   }
 
   resetGrid() {
+    if (this.state.isAnimating) return; // Prevent changes while animating
     const grid = getInitialGrid();
     this.setState({ grid }, () => {
       this.resetNodeClasses();
@@ -127,6 +136,7 @@ export default class PathfindingVisualizer extends Component {
   }
 
   clearWalls() {
+    if (this.state.isAnimating) return; // Prevent changes while animating
     const { grid } = this.state;
     const newGrid = grid.map(row => {
       return row.map(node => {
@@ -158,7 +168,7 @@ export default class PathfindingVisualizer extends Component {
   }
 
   render() {
-    const { grid, mouseIsPressed, selectedAlgorithm } = this.state;
+    const { grid, mouseIsPressed, selectedAlgorithm, isAnimating } = this.state;
 
     return (
       <>
@@ -166,31 +176,31 @@ export default class PathfindingVisualizer extends Component {
           <h1>Pathfinding Visualizer</h1>
           <div className="header-buttons">
             <div className="dropdown">
-              <button className="dropbtn">
+              <button className="dropbtn" disabled={isAnimating}>
                 Algorithms <span className="arrow"></span>
               </button>
               <div className="dropdown-content">
-                <button onClick={() => this.setState({ selectedAlgorithm: 'dijkstra' })}>
+                <button onClick={() => this.setState({ selectedAlgorithm: 'dijkstra' })} disabled={isAnimating}>
                   Dijkstra's Algorithm
                 </button>
-                <button onClick={() => this.setState({ selectedAlgorithm: 'bfs' })}>
+                <button onClick={() => this.setState({ selectedAlgorithm: 'bfs' })} disabled={isAnimating}>
                   BFS
                 </button>
-                <button onClick={() => this.setState({ selectedAlgorithm: 'dfs' })}>
+                <button onClick={() => this.setState({ selectedAlgorithm: 'dfs' })} disabled={isAnimating}>
                   DFS
                 </button>
-                <button onClick={() => this.setState({ selectedAlgorithm: 'astar' })}>
+                <button onClick={() => this.setState({ selectedAlgorithm: 'astar' })} disabled={isAnimating}>
                   A*
                 </button>
               </div>
             </div>
-            <button className="visualize-btn" onClick={() => this.visualizeSelectedAlgorithm()}>
+            <button className="visualize-btn" onClick={() => this.visualizeSelectedAlgorithm()} disabled={isAnimating}>
               Visualize {selectedAlgorithm.charAt(0).toUpperCase() + selectedAlgorithm.slice(1)}
             </button>
-            <button onClick={() => this.resetGrid()}>
+            <button onClick={() => this.resetGrid()} disabled={isAnimating}>
               Reset Grid
             </button>
-            <button onClick={() => this.clearWalls()}>
+            <button onClick={() => this.clearWalls()} disabled={isAnimating}>
               Clear Walls
             </button>
           </div>

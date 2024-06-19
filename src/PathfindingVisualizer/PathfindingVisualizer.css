@@ -47,6 +47,11 @@ body, html {
   align-items: center;
 }
 
+.dropbtn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
 .arrow {
   margin-left: 5px;
   width: 0;
@@ -96,7 +101,12 @@ button {
   transition: background-color 0.3s, transform 0.3s;
 }
 
-button:hover {
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+button:hover:enabled {
   background-color: #0056b3;
   transform: scale(1.05);
 }
@@ -109,7 +119,12 @@ button:focus {
   background-color: #28a745; /* Green color for Visualize button */
 }
 
-.visualize-btn:hover {
+.visualize-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.visualize-btn:hover:enabled {
   background-color: #218838; /* Darker green on hover */
 }
 
