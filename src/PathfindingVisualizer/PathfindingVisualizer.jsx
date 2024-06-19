@@ -108,16 +108,16 @@ export default class PathfindingVisualizer extends Component {
       let visitedNodesInOrder;
       console.log("Selected Algorithm:", selectedAlgorithm); // Log selected algorithm
       switch (selectedAlgorithm) {
-        case 'bfs':
+        case 'BFS':
           visitedNodesInOrder = bfs(grid, startNode, finishNode);
           break;
-        case 'dfs':
+        case 'DFS':
           visitedNodesInOrder = dfs(grid, startNode, finishNode);
           break;
-        case 'astar':
+        case 'A*':
           visitedNodesInOrder = astar(grid, startNode, finishNode);
           break;
-        case 'dijkstra':
+        case 'Dijkstra':
         default:
           visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
           break;
