@@ -180,16 +180,16 @@ export default class PathfindingVisualizer extends Component {
                 Algorithms <span className="arrow"></span>
               </button>
               <div className="dropdown-content">
-                <button onClick={() => this.setState({ selectedAlgorithm: 'dijkstra' })} disabled={isAnimating}>
-                  Dijkstra's Algorithm
+                <button onClick={() => this.setState({ selectedAlgorithm: 'Dijkstra' })} disabled={isAnimating}>
+                  Dijkstra
                 </button>
-                <button onClick={() => this.setState({ selectedAlgorithm: 'bfs' })} disabled={isAnimating}>
+                <button onClick={() => this.setState({ selectedAlgorithm: 'BFS' })} disabled={isAnimating}>
                   BFS
                 </button>
-                <button onClick={() => this.setState({ selectedAlgorithm: 'dfs' })} disabled={isAnimating}>
+                <button onClick={() => this.setState({ selectedAlgorithm: 'DFS' })} disabled={isAnimating}>
                   DFS
                 </button>
-                <button onClick={() => this.setState({ selectedAlgorithm: 'astar' })} disabled={isAnimating}>
+                <button onClick={() => this.setState({ selectedAlgorithm: 'A*' })} disabled={isAnimating}>
                   A*
                 </button>
               </div>
