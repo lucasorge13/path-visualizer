@@ -73,8 +73,10 @@ export default class PathfindingVisualizer extends Component {
       }
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
-        document.getElementById(`node-${node.row}-${node.col}`).className =
-          'node node-visited';
+        if (!node.isWall) {
+          document.getElementById(`node-${node.row}-${node.col}`).className =
+            'node node-visited';
+        }
       }, 10 * i);
     }
   }
@@ -83,8 +85,10 @@ export default class PathfindingVisualizer extends Component {
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
       setTimeout(() => {
         const node = nodesInShortestPathOrder[i];
-        document.getElementById(`node-${node.row}-${node.col}`).className =
-          'node node-shortest-path';
+        if (!node.isWall) {
+          document.getElementById(`node-${node.row}-${node.col}`).className =
+            'node node-shortest-path';
+        }
       }, 50 * i);
     }
   }
@@ -139,7 +143,11 @@ export default class PathfindingVisualizer extends Component {
     const { grid } = this.state;
     for (const row of grid) {
       for (const node of row) {
-        document.getElementById(`node-${node.row}-${node.col}`).className = 'node';
+        let extraClass = '';
+        if (node.isFinish) extraClass = 'node-finish';
+        else if (node.isStart) extraClass = 'node-start';
+        else if (node.isWall) extraClass = 'node-wall';
+        document.getElementById(`node-${node.row}-${node.col}`).className = `node ${extraClass}`;
       }
     }
   }
@@ -162,16 +170,16 @@ export default class PathfindingVisualizer extends Component {
                 Algorithms <span className="arrow"></span>
               </button>
               <div className="dropdown-content">
-                <button onClick={() => this.setState({ selectedAlgorithm: 'Dijkstra' })}>
-                  Dijkstra's
+                <button onClick={() => this.setState({ selectedAlgorithm: 'dijkstra' })}>
+                  Dijkstra's Algorithm
                 </button>
-                <button onClick={() => this.setState({ selectedAlgorithm: 'BFS' })}>
+                <button onClick={() => this.setState({ selectedAlgorithm: 'bfs' })}>
                   BFS
                 </button>
-                <button onClick={() => this.setState({ selectedAlgorithm: 'DFS' })}>
+                <button onClick={() => this.setState({ selectedAlgorithm: 'dfs' })}>
                   DFS
                 </button>
-                <button onClick={() => this.setState({ selectedAlgorithm: 'A*' })}>
+                <button onClick={() => this.setState({ selectedAlgorithm: 'astar' })}>
                   A*
                 </button>
               </div>
@@ -222,7 +230,7 @@ const getInitialGrid = () => {
   const grid = [];
   for (let row = 0; row < 20; row++) {
     const currentRow = [];
-    for (let col = 0; 50; col++) {
+    for (let col = 0; col < 50; col++) {
       currentRow.push(createNode(col, row));
     }
     grid.push(currentRow);
